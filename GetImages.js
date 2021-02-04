@@ -18,6 +18,7 @@ class GetImages{
 
         btnReset.addEventListener('click', e =>{
             this.deletePhotos();
+            btnAdc.nodeValue = null;    
         }, false);
     }
 
@@ -47,8 +48,25 @@ class GetImages{
             let fileReader = new FileReader();
 
             fileReader.onloadend = ()=>{
-                console.log(fileReader.result);
-                this.AdicionarImagem(fileReader.result);
+                
+                let fileType = fileReader.result.slice(0, 10);
+                console.log(fileType);
+
+                switch(fileType)
+                {
+                    case 'data:image':
+                        this.AdicionarImagem(fileReader.result);
+                        break;
+                    
+                    case 'data:video':
+                        this.AdicionarVideo(fileReader.result);
+                        break;
+
+                    default:
+                        alert('Insira um formato de arquivo valido');
+                        break;
+                }
+                
                 fileReader.abort();
             }
 
@@ -57,9 +75,6 @@ class GetImages{
             }
         }
 
-        
-
-        
     }
 
     AdicionarImagem(arquivo)
@@ -69,6 +84,28 @@ class GetImages{
         let imagem = document.createElement('img');
         imagem.src = arquivo;
         th.appendChild(imagem);
+        document.querySelector('tr').appendChild(th);
+        
+    }
+
+    AdicionarVideo(arquivo)
+    {
+        let th = document.createElement('th');
+        th.style.display = 'block';
+        let video = document.createElement('video');
+
+        Object.assign(video, { 
+            src: arquivo,
+            autoplay: true,
+            loop: true, 
+            controls: true,
+            muted: true
+        });
+        
+        video.addEventListener('click', (e) =>{
+            video.muted = !video.muted;
+        });
+        th.appendChild(video);
         document.querySelector('tr').appendChild(th);
         
     }
