@@ -12,14 +12,44 @@ class GetImages{
         let btnAdc = document.querySelector('.btn-adicionar');
         let btnReset = document.querySelector('.btn-reset');
         
+        let btnZoomIn = document.querySelector('.btnRight');
+        let btnZoomOut = document.querySelector('.btnLeft');
+
         btnAdc.addEventListener('change', e =>{
             this.getPhotos(e);
         }, true);
 
         btnReset.addEventListener('click', e =>{
             this.deletePhotos();
-            btnAdc.nodeValue = null;    
+            
         }, false);
+
+        btnZoomIn.addEventListener('click', e =>{
+            this.zoomInPhotos();  
+        }, true);
+
+        btnZoomOut.addEventListener('click', e =>{
+            this.zoomOutPhotos();  
+        }, true);
+    }
+
+    zoomInPhotos()
+    {
+        
+        let images = document.querySelectorAll('.mediaSize');
+
+        images.forEach(element => {
+            element.style.width = '100%';
+        });
+    }
+
+    zoomOutPhotos()
+    {
+        let images = document.querySelectorAll('.mediaSize');
+
+        images.forEach(element => {
+            element.style.width = '70%';
+        });
     }
 
     deletePhotos()
@@ -37,7 +67,6 @@ class GetImages{
 
         
         let arquivo = event.target.files;
-        
         
         
         
@@ -83,6 +112,7 @@ class GetImages{
         th.style.display = 'block';
         let imagem = document.createElement('img');
         imagem.src = arquivo;
+        imagem.className = 'mediaSize';
         th.appendChild(imagem);
         document.querySelector('tr').appendChild(th);
         
@@ -99,12 +129,12 @@ class GetImages{
             autoplay: true,
             loop: true, 
             controls: true,
-            muted: true
+            muted: true,
+            className: 'mediaSize'
         });
         
-        video.addEventListener('click', (e) =>{
-            video.muted = !video.muted;
-        });
+        
+
         th.appendChild(video);
         document.querySelector('tr').appendChild(th);
         
