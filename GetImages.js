@@ -1,9 +1,7 @@
 class GetImages{
 
-
     constructor()
     {
-        console.log('Abri')
         this.StartButtons();
     }
 
@@ -15,16 +13,32 @@ class GetImages{
         let btnZoomIn = document.querySelector('.btnRight');
         let btnZoomOut = document.querySelector('.btnLeft');
 
+        let filterCheckbox = document.querySelector('.checkboxBW');
+        let loopCheckbox = document.querySelector('.checkboxLoop');
+        let autoPlayCheckbox = document.querySelector('.checkboxAutoplay');
+
+        let tableClass = document.querySelector('.imagesTable');
+        let loadingElement = document.querySelector('.loadingImages');
+
+        tableClass.style.display = 'none';
+        loadingElement.style.display = 'none';
+
         btnAdc.addEventListener('change', e =>{
+            loadingElement.style.display = 'flex';
             this.getPhotos(e).then((result) =>{
-                console.log(result);
-                this.AdicionarMidia(result);
+                this.AdicionarMidia(result, 
+                    loopCheckbox.checked, 
+                    autoPlayCheckbox.checked,
+                    filterCheckbox.checked);
+            }).finally(() => {
+                loadingElement.style.display = 'none';
+                tableClass.style.display = 'table';
             });
         }, true);
 
         btnReset.addEventListener('click', e =>{
             this.deletePhotos();
-            
+            tableClass.style.display = 'none';
         }, false);
 
         btnZoomIn.addEventListener('click', e =>{
@@ -38,7 +52,6 @@ class GetImages{
 
     zoomInPhotos()
     {
-        
         let images = document.querySelectorAll('.mediaSize');
 
         images.forEach(element => {
@@ -58,8 +71,6 @@ class GetImages{
     deletePhotos()
     {
         let photoTable = document.querySelectorAll('th');
-        console.log(photoTable);
-
         photoTable.forEach((element, index, array)=>{
             element.parentNode.removeChild(element);
         });
@@ -67,7 +78,6 @@ class GetImages{
 
     getPhotos(event)
     {
-
         return new Promise((resolve, reject) =>
         {
             let photos = event.target.files;
@@ -78,7 +88,7 @@ class GetImages{
                 for(let i=0; i < photos.length; i++)
                 {
                     let fileReader = new FileReader();
-                    fileReader.onloadend = ()=>
+                    fileReader.onload = ()=>
                     {
                         let fileType = fileReader.result.slice(0, 10);
                         
@@ -108,7 +118,7 @@ class GetImages{
         });
     }  
         
-    AdicionarMidia(files)
+    AdicionarMidia(files, loop=false, autoplay=false, bwFilter=false)
     {
         files.sort((element1, element2) =>{
             return element1.id - element2.id;
@@ -123,13 +133,18 @@ class GetImages{
             
             Object.assign(media, {
                 src: files[i].fileData,
-                autoplay: false,
-                loop: true, 
+                autoplay,
+                loop, 
                 controls: true,
                 muted: true,
                 className: 'mediaSize'
             });
 
+            if(bwFilter==true)
+            {
+                media.className = 'mediaSize bwFilter';
+            }
+           
             td.appendChild(media);
             document.querySelector('tr').appendChild(td);
         }

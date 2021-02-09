@@ -12,6 +12,7 @@ body{
     margin-left: auto;
     margin-right: auto;
     background-color: gray;
+    display: table;
 }
 
 .buttons{
@@ -46,4 +47,42 @@ body{
 }
 .mediaSize{
     width: 70%;
+}
+
+.checkBoxes{
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+}
+
+.hidden{
+    visibility: hidden;
+    display: flex;
+}
+
+.bwFilter{
+    filter: grayscale(100%);
+}
+
+.loadingImages{
+
+
+    display: flex;
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    align-content: center;
+    align-self: center;
+    justify-content: center;
+    font-size: 30px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    
+}
+
+.loadingImages img{
+    width: 10%;
+    text-align: center;
+    margin-right: 15px;
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +9,16 @@
 <body>
     <h1>Meu leitor</h1>
     <div class="buttons">
-        <input type="file" class='btn btn-adicionar' value="Teste" multiple="multiple" accept=".png, .jpg, .jpeg, .gif, .mp4">
+        <input type="file" id="filesForm" class='btn btn-adicionar hidden' value="Teste" multiple="multiple" accept=".png, .jpg, .jpeg, .gif, .mp4">
+        <button><label for="filesForm">Selecione os arquivos</label></button>
         <input type="button" class="btn btn-reset" value="Resetar arquivos">
+        <br><br>
+        <input type="checkbox" class="checkbox checkboxBW" value="BlackAndWhite">Forçar preto e branco
+        <input type="checkbox" class="checkbox checkboxLoop" value="loop">Loop para vídeos
+        <input type="checkbox" class="checkbox checkboxAutoplay">Vídeos reproduzem automaticamente (PODE TRAVAR)
+    </div>
+    <div class="loadingImages">
+        <img src="icons/loading.gif"><span>CARREGANDO</span>
     </div>
     <table class="imagesTable">
         <tr>
