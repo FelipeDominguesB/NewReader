@@ -16,7 +16,10 @@ class GetImages{
         let btnZoomOut = document.querySelector('.btnLeft');
 
         btnAdc.addEventListener('change', e =>{
-            this.getPhotos(e);
+            this.getPhotos(e).then((result) =>{
+                console.log(result);
+                this.AdicionarMidia(result);
+            });
         }, true);
 
         btnReset.addEventListener('click', e =>{
@@ -65,78 +68,71 @@ class GetImages{
     getPhotos(event)
     {
 
-        
-        let arquivo = event.target.files;
-        
-        
-        
-        if(arquivo)
+        return new Promise((resolve, reject) =>
         {
-            for(let i=0; i < arquivo.length; i++){
+            let photos = event.target.files;
 
-            let fileReader = new FileReader();
-
-            fileReader.onloadend = ()=>{
-                
-                let fileType = fileReader.result.slice(0, 10);
-                console.log(fileType);
-
-                switch(fileType)
+            if(photos)
+            {
+                let photosArray = []; 
+                for(let i=0; i < photos.length; i++)
                 {
-                    case 'data:image':
-                        this.AdicionarImagem(fileReader.result);
-                        break;
-                    
-                    case 'data:video':
-                        this.AdicionarVideo(fileReader.result);
-                        break;
+                    let fileReader = new FileReader();
+                    fileReader.onloadend = ()=>
+                    {
+                        let fileType = fileReader.result.slice(0, 10);
+                        
+                        switch(fileType)
+                        {
+                            case 'data:image':
+                            case 'data:video':
+                                photosArray.push({fileData: fileReader.result, fileType, id: i});
 
-                    default:
-                        alert('Insira um formato de arquivo valido');
-                        break;
+                                if(photos.length == photosArray.length) {
+                                    fileReader.abort();
+                                    resolve(photosArray);
+                                }
+                                break;
+
+                            default:
+                                alert('Insira um formato de arquivo valido');
+                                reject();
+                                break;
+                        }
+                        
+                        fileReader.abort();
+                    }
+                    fileReader.readAsDataURL(photos[i]);
                 }
-                
-                fileReader.abort();
             }
-
-            
-            fileReader.readAsDataURL(arquivo[i]);
-            }
-        }
-
-    }
-
-    AdicionarImagem(arquivo)
-    {
-        let th = document.createElement('th');
-        th.style.display = 'block';
-        let imagem = document.createElement('img');
-        imagem.src = arquivo;
-        imagem.className = 'mediaSize';
-        th.appendChild(imagem);
-        document.querySelector('tr').appendChild(th);
-        
-    }
-
-    AdicionarVideo(arquivo)
-    {
-        let th = document.createElement('th');
-        th.style.display = 'block';
-        let video = document.createElement('video');
-
-        Object.assign(video, { 
-            src: arquivo,
-            autoplay: true,
-            loop: true, 
-            controls: true,
-            muted: true,
-            className: 'mediaSize'
         });
+    }  
         
-        
+    AdicionarMidia(files)
+    {
+        files.sort((element1, element2) =>{
+            return element1.id - element2.id;
+        });
 
-        th.appendChild(video);
-        document.querySelector('tr').appendChild(th);
+        for(let i = 0; i < files.length; i++)
+        {
+            let td = document.createElement('th');
+            td.style.display = 'block';
+
+            let media = document.createElement(files[i].fileType == 'data:image' ? 'img' : 'video');
+            
+            Object.assign(media, {
+                src: files[i].fileData,
+                autoplay: false,
+                loop: true, 
+                controls: true,
+                muted: true,
+                className: 'mediaSize'
+            });
+
+            td.appendChild(media);
+            document.querySelector('tr').appendChild(td);
+        }
         
     }
 }
