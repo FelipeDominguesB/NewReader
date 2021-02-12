@@ -3,6 +3,37 @@ class GetImages{
     constructor()
     {
         this.StartButtons();
+
+        if(localStorage.getItem('files') != null)
+        {
+            let files = JSON.parse(localStorage.getItem('files'));
+
+            console.log(files.length);
+
+            for(let i = 0; i<files.length; i++)
+            {
+                let td = document.createElement('th');
+                td.style.display = 'block';
+                let media = document.createElement(files[0].type); 
+                
+
+                Object.assign(media, {
+                    src: files[i].src, 
+                    autoplay: files[i].autoplay, 
+                    loop: files[i].loop,
+                    controls: true,
+                    muted: true, 
+                    className: 'mediaSize'
+                });
+                console.log(media);
+                td.appendChild(media);
+                document.querySelector('tr').appendChild(td);
+            }
+            let tableClass = document.querySelector('.imagesTable');
+            tableClass.style.display = 'table';
+        }
+    
+       
     }
 
     StartButtons()
@@ -30,9 +61,10 @@ class GetImages{
                     loopCheckbox.checked, 
                     autoPlayCheckbox.checked,
                     filterCheckbox.checked);
-            }).finally(() => {
+            }).finally((result) => {
                 loadingElement.style.display = 'none';
                 tableClass.style.display = 'table';
+                
             });
         }, true);
 
@@ -64,7 +96,8 @@ class GetImages{
         let images = document.querySelectorAll('.mediaSize');
 
         images.forEach(element => {
-            element.style.width = '70%';
+            console.log(element.style);
+            //element.style.width = '70%';
         });
     }
 
@@ -74,6 +107,8 @@ class GetImages{
         photoTable.forEach((element, index, array)=>{
             element.parentNode.removeChild(element);
         });
+
+        localStorage.clear();
     }
 
     getPhotos(event)
@@ -118,12 +153,17 @@ class GetImages{
         });
     }  
         
+    AdicionarPreExistenteMidia(htmlNode)
+    {
+
+    }
+
     AdicionarMidia(files, loop=false, autoplay=false, bwFilter=false)
     {
         files.sort((element1, element2) =>{
             return element1.id - element2.id;
         });
-
+        let mediaFiles = [];
         for(let i = 0; i < files.length; i++)
         {
             let td = document.createElement('th');
@@ -144,10 +184,23 @@ class GetImages{
             {
                 media.className = 'mediaSize bwFilter';
             }
-           
+            let type = media.tagName;
+            mediaFiles.push({
+                src: media.src, 
+                autoplay: media.autoplay, 
+                loop: media.loop,
+                controls: true,
+                muted: true,
+                type: type,  
+                className: 'mediaSize',
+            });
+
             td.appendChild(media);
             document.querySelector('tr').appendChild(td);
         }
+
+        console.log(JSON.stringify(mediaFiles));
+        localStorage.setItem('files', JSON.stringify(mediaFiles));
         
     }
 }
