@@ -2,38 +2,16 @@ class GetImages{
 
     constructor()
     {
-        this.StartButtons();
+        let tables = this.StartButtons();
 
         if(localStorage.getItem('files') != null)
         {
             let files = JSON.parse(localStorage.getItem('files'));
 
-            console.log(files.length);
+            this.AdicionarMidia(files);
 
-            for(let i = 0; i<files.length; i++)
-            {
-                let td = document.createElement('th');
-                td.style.display = 'block';
-                let media = document.createElement(files[0].type); 
-                
-
-                Object.assign(media, {
-                    src: files[i].src, 
-                    autoplay: files[i].autoplay, 
-                    loop: files[i].loop,
-                    controls: true,
-                    muted: true, 
-                    className: 'mediaSize'
-                });
-                console.log(media);
-                td.appendChild(media);
-                document.querySelector('tr').appendChild(td);
-            }
-            let tableClass = document.querySelector('.imagesTable');
-            tableClass.style.display = 'table';
+            this.showTable(tables[0], tables[1]);
         }
-    
-       
     }
 
     StartButtons()
@@ -51,26 +29,24 @@ class GetImages{
         let tableClass = document.querySelector('.imagesTable');
         let loadingElement = document.querySelector('.loadingImages');
 
-        tableClass.style.display = 'none';
-        loadingElement.style.display = 'none';
+        this.showNothing(tableClass, loadingElement);
 
         btnAdc.addEventListener('change', e =>{
-            loadingElement.style.display = 'flex';
+            this.showLoad(tableClass, loadingElement);
+
             this.getPhotos(e).then((result) =>{
                 this.AdicionarMidia(result, 
                     loopCheckbox.checked, 
                     autoPlayCheckbox.checked,
                     filterCheckbox.checked);
             }).finally((result) => {
-                loadingElement.style.display = 'none';
-                tableClass.style.display = 'table';
-                
+                this.showTable(tableClass, loadingElement);
             });
         }, true);
 
         btnReset.addEventListener('click', e =>{
             this.deletePhotos();
-            tableClass.style.display = 'none';
+            this.showNothing(tableClass, loadingElement);
         }, false);
 
         btnZoomIn.addEventListener('click', e =>{
@@ -80,6 +56,8 @@ class GetImages{
         btnZoomOut.addEventListener('click', e =>{
             this.zoomOutPhotos();  
         }, true);
+
+        return [tableClass, loadingElement];
     }
 
     zoomInPhotos()
@@ -99,6 +77,24 @@ class GetImages{
             console.log(element.style);
             //element.style.width = '70%';
         });
+    }
+
+    showNothing(tableClass, loadingElement)
+    {
+        tableClass.style.display = 'none';
+        loadingElement.style.display = 'none';
+    }
+
+    showTable(tableClass, loadingElement)
+    {
+        loadingElement.style.display = 'none';
+        tableClass.style.display = 'table';            
+    }
+
+    showLoad(tableClass, loadingElement)
+    {
+        loadingElement.style.display = 'flex';
+        tableClass.style.display = 'none'; 
     }
 
     deletePhotos()
@@ -131,7 +127,7 @@ class GetImages{
                         {
                             case 'data:image':
                             case 'data:video':
-                                photosArray.push({fileData: fileReader.result, fileType, id: i});
+                                photosArray.push({src: fileReader.result, fileType, id: i});
 
                                 if(photos.length == photosArray.length) {
                                     fileReader.abort();
@@ -153,11 +149,6 @@ class GetImages{
         });
     }  
         
-    AdicionarPreExistenteMidia(htmlNode)
-    {
-
-    }
-
     AdicionarMidia(files, loop=false, autoplay=false, bwFilter=false)
     {
         files.sort((element1, element2) =>{
@@ -172,7 +163,7 @@ class GetImages{
             let media = document.createElement(files[i].fileType == 'data:image' ? 'img' : 'video');
             
             Object.assign(media, {
-                src: files[i].fileData,
+                src: files[i].src,
                 autoplay,
                 loop, 
                 controls: true,
@@ -184,14 +175,14 @@ class GetImages{
             {
                 media.className = 'mediaSize bwFilter';
             }
-            let type = media.tagName;
+            
             mediaFiles.push({
                 src: media.src, 
                 autoplay: media.autoplay, 
                 loop: media.loop,
                 controls: true,
                 muted: true,
-                type: type,  
+                fileType: files[i].fileType,  
                 className: 'mediaSize',
             });
 
