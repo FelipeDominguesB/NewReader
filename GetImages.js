@@ -5,6 +5,9 @@ class GetImages{
         
 
         this.btnAdc = document.querySelector('.btn-adicionar');
+
+        this.inputFileElement = document.querySelector('#filesForm');
+
         this.btnReset = document.querySelector('.btn-reset');
         this.btnZoomIn = document.querySelector('.btnRight');
         this.btnZoomOut = document.querySelector('.btnLeft');
@@ -15,17 +18,6 @@ class GetImages{
         this.loadingElement = document.querySelector('.loadingImages');
 
         this.StartButtons();
-
-        if(localStorage.getItem('files') != null)
-        {
-            let files = JSON.parse(localStorage.getItem('files'));
-            console.log(files);
-            let bwFilter = files[0].className == 'mediaSize bwFilter';
-            this.AdicionarMidia(files, files[0].loop, files[0].autoplay, bwFilter);
-
-            this.showTable();     
-        }
-
         this.imagesWidth = 70;
         
     }
@@ -34,9 +26,12 @@ class GetImages{
     {
         this.showNothing();
 
-        this.btnAdc.addEventListener('change', e =>{
-            this.showLoad();
+        this.btnAdc.addEventListener('click', e =>{
+            this.inputFileElement.click();
+        }, true);
 
+        this.inputFileElement.addEventListener('change', e =>{
+            this.showLoad();
             this.getPhotos(e).then((result) =>{
                 this.AdicionarMidia(result, 
                     this.loopCheckbox.checked, 
@@ -44,6 +39,7 @@ class GetImages{
                     this.filterCheckbox.checked);
             }).finally((result) => {
                 this.showTable();
+                this.inputFileElement.value = '';
             });
         }, true);
 
@@ -89,13 +85,13 @@ class GetImages{
         this.loadingElement.style.display = 'none';
     }
 
-    showTable(tableClass, loadingElement)
+    showTable()
     {
         this.loadingElement.style.display = 'none';
         this.tableClass.style.display = 'table';            
     }
 
-    showLoad(tableClass, loadingElement)
+    showLoad()
     {
         this.loadingElement.style.display = 'flex';
         this.tableClass.style.display = 'none'; 
@@ -108,7 +104,6 @@ class GetImages{
             element.parentNode.removeChild(element);
         });
 
-        localStorage.clear();
     }
 
     getPhotos(e)
@@ -158,7 +153,7 @@ class GetImages{
         files.sort((element1, element2) =>{
             return element1.id - element2.id;
         });
-        let mediaFiles = [];
+    
         for(let i = 0; i < files.length; i++)
         {
             let td = document.createElement('th');
@@ -179,23 +174,10 @@ class GetImages{
             {
                 media.className = 'mediaSize bwFilter';
             }
-            
-            mediaFiles.push({
-                src: media.src, 
-                autoplay: media.autoplay, 
-                loop: media.loop,
-                controls: true,
-                muted: true,
-                fileType: files[i].fileType,  
-                className: media.className,
-            });
 
             td.appendChild(media);
             document.querySelector('tr').appendChild(td);
         }
-
-        console.log(JSON.stringify(mediaFiles));
-        localStorage.setItem('files', JSON.stringify(mediaFiles));
         
     }
 }

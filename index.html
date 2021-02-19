@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="main.css">
+    
     <title>Leitor</title>
 </head>
 <body>
     <h1>Meu leitor</h1>
     <div class="buttons">
-        <input type="file" id="filesForm" class='btn btn-adicionar hidden' value="Teste" multiple="multiple" accept=".png, .jpg, .jpeg, .gif, .mp4">
-        <button><label for="filesForm">Selecione os arquivos</label></button>
+        
+        <button class="btn btn-adicionar">Selecione os arquivos<input type="file" id="filesForm" class='hidden' multiple="multiple" accept=".png, .jpg, .jpeg, .gif, .mp4"></button>
         <input type="button" class="btn btn-reset" value="Resetar arquivos">
         <br><br>
         <input type="checkbox" class="checkbox checkboxBW" value="BlackAndWhite">Forçar preto e branco
@@ -21,9 +22,11 @@
         <img src="icons/loading.gif"><span>CARREGANDO</span>
     </div>
     <table class="imagesTable">
+        <tbody>
         <tr>
 
         </tr>
+        </tbody>
     </table>
 
     <div class="btnZoom btnLeft">
@@ -36,5 +39,6 @@
 
     <script src="GetImages.js"></script>
     <script src='main.js'></script>
+    
 </body>
 </html>
