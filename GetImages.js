@@ -2,73 +2,72 @@ class GetImages{
 
     constructor()
     {
-        let tables = this.StartButtons();
+        
+
+        this.btnAdc = document.querySelector('.btn-adicionar');
+        this.btnReset = document.querySelector('.btn-reset');
+        this.btnZoomIn = document.querySelector('.btnRight');
+        this.btnZoomOut = document.querySelector('.btnLeft');
+        this.filterCheckbox = document.querySelector('.checkboxBW');
+        this.loopCheckbox = document.querySelector('.checkboxLoop');
+        this.autoPlayCheckbox = document.querySelector('.checkboxAutoplay');
+        this.tableClass = document.querySelector('.imagesTable');
+        this.loadingElement = document.querySelector('.loadingImages');
+
+        this.StartButtons();
 
         if(localStorage.getItem('files') != null)
         {
             let files = JSON.parse(localStorage.getItem('files'));
+            console.log(files);
+            let bwFilter = files[0].className == 'mediaSize bwFilter';
+            this.AdicionarMidia(files, files[0].loop, files[0].autoplay, bwFilter);
 
-            this.AdicionarMidia(files);
-
-            this.showTable(tables[0], tables[1]);
-
-            
+            this.showTable();     
         }
 
         this.imagesWidth = 70;
+        
     }
 
     StartButtons()
     {
-        let btnAdc = document.querySelector('.btn-adicionar');
-        let btnReset = document.querySelector('.btn-reset');
-        
-        let btnZoomIn = document.querySelector('.btnRight');
-        let btnZoomOut = document.querySelector('.btnLeft');
+        this.showNothing();
 
-        let filterCheckbox = document.querySelector('.checkboxBW');
-        let loopCheckbox = document.querySelector('.checkboxLoop');
-        let autoPlayCheckbox = document.querySelector('.checkboxAutoplay');
-
-        let tableClass = document.querySelector('.imagesTable');
-        let loadingElement = document.querySelector('.loadingImages');
-
-        this.showNothing(tableClass, loadingElement);
-
-        btnAdc.addEventListener('change', e =>{
-            this.showLoad(tableClass, loadingElement);
+        this.btnAdc.addEventListener('change', e =>{
+            this.showLoad();
 
             this.getPhotos(e).then((result) =>{
                 this.AdicionarMidia(result, 
-                    loopCheckbox.checked, 
-                    autoPlayCheckbox.checked,
-                    filterCheckbox.checked);
+                    this.loopCheckbox.checked, 
+                    this.autoPlayCheckbox.checked,
+                    this.filterCheckbox.checked);
             }).finally((result) => {
-                this.showTable(tableClass, loadingElement);
+                this.showTable();
             });
         }, true);
 
-        btnReset.addEventListener('click', e =>{
+        this.btnReset.addEventListener('click', e =>{
             this.deletePhotos();
-            this.showNothing(tableClass, loadingElement);
+            this.showNothing();
         }, false);
 
-        btnZoomIn.addEventListener('click', e =>{
+        this.btnZoomIn.addEventListener('click', e =>{
             this.zoomInPhotos();  
         }, true);
 
-        btnZoomOut.addEventListener('click', e =>{
+        this.btnZoomOut.addEventListener('click', e =>{
             this.zoomOutPhotos();  
         }, true);
 
-        return [tableClass, loadingElement];
+   
     }
 
     zoomInPhotos()
     {
         let images = document.querySelectorAll('.mediaSize');
 
-        this.imagesWidth += 10;
+        if(this.imagesWidth < 100) this.imagesWidth += 10;
         images.forEach(element => {
             element.style.width = this.imagesWidth + '%';
         });
@@ -78,45 +77,45 @@ class GetImages{
     {
         let images = document.querySelectorAll('.mediaSize');
 
-        this.imagesWidth -= 10;
+        if(this.imagesWidth >50) this.imagesWidth -= 10;
         images.forEach(element => {
             element.style.width = this.imagesWidth + '%';
         });
     }
 
-    showNothing(tableClass, loadingElement)
+    showNothing()
     {
-        tableClass.style.display = 'none';
-        loadingElement.style.display = 'none';
+        this.tableClass.style.display = 'none';
+        this.loadingElement.style.display = 'none';
     }
 
     showTable(tableClass, loadingElement)
     {
-        loadingElement.style.display = 'none';
-        tableClass.style.display = 'table';            
+        this.loadingElement.style.display = 'none';
+        this.tableClass.style.display = 'table';            
     }
 
     showLoad(tableClass, loadingElement)
     {
-        loadingElement.style.display = 'flex';
-        tableClass.style.display = 'none'; 
+        this.loadingElement.style.display = 'flex';
+        this.tableClass.style.display = 'none'; 
     }
 
     deletePhotos()
     {
         let photoTable = document.querySelectorAll('th');
-        photoTable.forEach((element, index, array)=>{
+        photoTable.forEach((element)=>{
             element.parentNode.removeChild(element);
         });
 
         localStorage.clear();
     }
 
-    getPhotos(event)
+    getPhotos(e)
     {
         return new Promise((resolve, reject) =>
         {
-            let photos = event.target.files;
+            let photos = e.target.files;
 
             if(photos)
             {
@@ -188,7 +187,7 @@ class GetImages{
                 controls: true,
                 muted: true,
                 fileType: files[i].fileType,  
-                className: 'mediaSize',
+                className: media.className,
             });
 
             td.appendChild(media);
