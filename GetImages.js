@@ -11,7 +11,11 @@ class GetImages{
             this.AdicionarMidia(files);
 
             this.showTable(tables[0], tables[1]);
+
+            
         }
+
+        this.imagesWidth = 70;
     }
 
     StartButtons()
@@ -64,8 +68,9 @@ class GetImages{
     {
         let images = document.querySelectorAll('.mediaSize');
 
+        this.imagesWidth += 10;
         images.forEach(element => {
-            element.style.width = '100%';
+            element.style.width = this.imagesWidth + '%';
         });
     }
 
@@ -73,9 +78,9 @@ class GetImages{
     {
         let images = document.querySelectorAll('.mediaSize');
 
+        this.imagesWidth -= 10;
         images.forEach(element => {
-            console.log(element.style);
-            //element.style.width = '70%';
+            element.style.width = this.imagesWidth + '%';
         });
     }
 
