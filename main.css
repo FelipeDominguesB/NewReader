@@ -6,20 +6,101 @@ h1{
 
 body{
     z-index: 10;
+    margin: 0;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
 }
+
+
+.screen{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    display: flex;
+    align-items: stretch;
+    flex-shrink: 0;
+    background-image: linear-gradient(135deg, rgb(128, 5, 128) , rgb(226, 8, 63) );
+}
+
+.screen .tituloPagina{
+    width: 100%;
+    text-align: center;
+}
+.screen .menuOpcopes{
+    
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+        
+}
+
+.exibicaoOpcoes{
+    flex-flow: column nowrap;
+}
+
+.exibicaoImagens{
+    flex-flow: column nowrap;
+}
+.selectImagesBox img:hover{
+    cursor: pointer;
+}
+
 .imagesTable{
-    margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: gray;
-    display: table;
+    background-image: white;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    border-spacing: 0;
+    overflow-y: scroll  ;
+    width: 100%;
+}
+
+.imagesTable th{
+    padding: 0;
 }
 
 .buttons{
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+    display: flex;
+    margin: 40px;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.buttons input{
+    display: inline;
+}
+
+.buttons li{
+    margin: 10px 0 10px 0;
+    list-style: none;
+    
+}
+
+.exibicaoImagens .resetFilesDiv{
+    display: flex;
+    margin: 10px;
+    width: 100%;
+    justify-content: center;
+}
+.resetFilesDiv input{
+    padding: 8px;
+    margin: 5px;
+    background-color: white;
+    color: rgb(128, 5, 128);
+    border-color: rgb(128, 5, 128);    
+    border-radius: 10px;
+}
+
+.resetFilesDiv input:hover{
+    
+    background-color: rgb(128, 5, 128);;
+    color: white;
+    border-color: white;    
+    border-radius: 10px;
+    cursor: pointer;
+    
 }
 .btnZoom{
     cursor: pointer;
@@ -34,6 +115,13 @@ body{
     margin-right: 20px;
 }
 
+.selectImagesBox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+}
 .btnLeft img{
     position: fixed;
     bottom: 0;
@@ -69,7 +157,6 @@ body{
 
 
     display: flex;
-    margin-top: 50px;
     margin-left: auto;
     margin-right: auto;
     align-items: center;
@@ -77,7 +164,6 @@ body{
     align-self: center;
     justify-content: center;
     font-size: 30px;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
     
 }
 
@@ -86,3 +172,4 @@ body{
     text-align: center;
     margin-right: 15px;
 }
+

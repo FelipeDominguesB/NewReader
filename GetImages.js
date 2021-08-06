@@ -3,20 +3,23 @@ class GetImages{
     constructor()
     {
         
-
-        this.btnAdc = document.querySelector('.btn-adicionar');
-
         this.inputFileElement = document.querySelector('#filesForm');
-
+        
+        this.btnAdc = document.querySelector('.btn-adicionar');
         this.btnReset = document.querySelector('.btn-reset');
         this.btnZoomIn = document.querySelector('.btnRight');
         this.btnZoomOut = document.querySelector('.btnLeft');
+        this.btnHide = document.querySelector('.btn-hide');
+
         this.filterCheckbox = document.querySelector('.checkboxBW');
         this.loopCheckbox = document.querySelector('.checkboxLoop');
         this.autoPlayCheckbox = document.querySelector('.checkboxAutoplay');
+        
         this.tableClass = document.querySelector('.imagesTable');
+        this.showImages = document.querySelector('.exibicaoImagens')
+        this.selectImages = document.querySelector('.exibicaoOpcoes');
         this.loadingElement = document.querySelector('.loadingImages');
-
+        this.resetFilesDiv = document.querySelector('.resetFilesDiv');
         this.StartButtons();
         this.imagesWidth = 70;
         
@@ -56,7 +59,13 @@ class GetImages{
             this.zoomOutPhotos();  
         }, true);
 
-   
+        this.btnHide.addEventListener('click', e =>{
+            this.HideShowResetFilesVisibility();
+        }, true);
+
+        this.resetFilesDiv.addEventListener('mouseenter', e=>{
+            this.HideShowResetFilesVisibility(1);
+        });
     }
 
     zoomInPhotos()
@@ -69,11 +78,26 @@ class GetImages{
         });
     }
 
+    HideShowResetFilesVisibility(opacity = 0)
+    {
+        this.resetFilesDiv.style.opacity = opacity;
+        
+        if(opacity == 0) 
+        {
+            
+            this.resetFilesDiv.style.position = 'absolute';
+        }
+        else
+        {
+            this.resetFilesDiv.style.position = 'static';
+        }
+    }
+
     zoomOutPhotos()
     {
         let images = document.querySelectorAll('.mediaSize');
 
-        if(this.imagesWidth >50) this.imagesWidth -= 10;
+        if(this.imagesWidth >20) this.imagesWidth -= 10;
         images.forEach(element => {
             element.style.width = this.imagesWidth + '%';
         });
@@ -81,20 +105,23 @@ class GetImages{
 
     showNothing()
     {
-        this.tableClass.style.display = 'none';
+        this.selectImages.style.display = 'flex';
+        this.showImages.style.display = 'none';
         this.loadingElement.style.display = 'none';
     }
 
     showTable()
     {
+        this.selectImages.style.display = 'none';
         this.loadingElement.style.display = 'none';
-        this.tableClass.style.display = 'table';            
+        this.showImages.style.display = 'flex';            
     }
 
     showLoad()
     {
+        this.selectImages.style.display = 'none';
         this.loadingElement.style.display = 'flex';
-        this.tableClass.style.display = 'none'; 
+        this.showImages.style.display = 'none'; 
     }
 
     deletePhotos()
@@ -158,6 +185,7 @@ class GetImages{
         {
             let td = document.createElement('th');
             td.style.display = 'block';
+            td.style.padding = 0;
 
             let media = document.createElement(files[i].fileType == 'data:image' ? 'img' : 'video');
             
@@ -167,7 +195,7 @@ class GetImages{
                 loop, 
                 controls: true,
                 muted: true,
-                className: 'mediaSize'
+                className: 'mediaSize',
             });
 
             if(bwFilter==true)

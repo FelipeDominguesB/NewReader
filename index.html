@@ -8,37 +8,67 @@
     <title>Leitor</title>
 </head>
 <body>
-    <h1>Meu leitor</h1>
-    <div class="buttons">
-        
-        <button class="btn btn-adicionar">Selecione os arquivos<input type="file" id="filesForm" class='hidden' multiple="multiple" accept=".png, .jpg, .jpeg, .gif, .mp4"></button>
-        <input type="button" class="btn btn-reset" value="Resetar arquivos">
-        <br><br>
-        <input type="checkbox" class="checkbox checkboxBW" value="BlackAndWhite">Forçar preto e branco
-        <input type="checkbox" class="checkbox checkboxLoop" value="loop">Loop para vídeos
-        <input type="checkbox" class="checkbox checkboxAutoplay">Vídeos reproduzem automaticamente (PODE TRAVAR)
+    <div class="screen exibicaoOpcoes">
+        <h1 class="tituloPagina">Seja bem-vindo ao meu leitor!</h1>
+        <h2 class="tituloPagina">Uma alternativa caso queira visualizar melhor os arquivos no seu computador</h2>
+    
+        <div class="menuOpcopes">
+            <div class="selectImagesBox">
+                
+                <img src="icons/add.png" class="btn btn-adicionar">
+                    <input type="file" id="filesForm" class='hidden' multiple="multiple" accept=".png, .jpg, .jpeg, .gif, .mp4">
+                    <label>Selecione uma imagem</label>  
+                </img>
+                
+                
+            </div>
+            <div class="buttons">
+                
+                <li>
+                    <input type="checkbox" class="checkbox checkboxBW" value="BlackAndWhite">Forçar preto e branco</input>
+                </li>
+                <li>
+                    <input type="checkbox" class="checkbox checkboxLoop" value="loop">Loop para vídeos</input>
+                </li>
+    
+                <li>
+                    <input type="checkbox" class="checkbox checkboxAutoplay">Vídeos reproduzem automaticamente (PODE TRAVAR)</input>
+                </li>
+               
+            </div>
+        </div>
     </div>
-    <div class="loadingImages">
+    <div class="screen loadingImages">
         <img src="icons/loading.gif"><span>CARREGANDO</span>
     </div>
-    <table class="imagesTable">
-        <tbody>
-        <tr>
-
-        </tr>
-        </tbody>
-    </table>
-
-    <div class="btnZoom btnLeft">
-        <img src="icons/zoomOut.png">
+    
+    <div class="screen exibicaoImagens">
+        
+        <div class="resetFilesDiv">
+            <input type="button" class="btn btn-reset" value="Resetar arquivos">
+            <input type="button" class="btn btn-hide" value="Ocultar">
+        </div>
+        
+    
+        <table class="imagesTable">
+                <tr>
+                    
+                </tr>
+        </table>
+    
+        <div class="btnZoom btnLeft">
+            <img src="icons/zoomOut.png">
+        </div>
+    
+        <div class="btnZoom btnRight">
+            <img class='zoomIn' src="icons/zoomIn.png">
+        </div>
+    
+        
     </div>
-
-    <div class="btnZoom btnRight">
-        <img class='zoomIn' src="icons/zoomIn.png">
-    </div>
-
+    
+    
     <script src="GetImages.js"></script>
     <script src='main.js'></script>
-    
 </body>
 </html>
