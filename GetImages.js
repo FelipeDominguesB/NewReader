@@ -3,6 +3,7 @@ class GetImages{
     constructor()
     {
         
+        this.focusedImage = "#image-1";
         this.inputFileElement = document.querySelector('#filesForm');
         
         this.btnAdc = document.querySelector('.btn-adicionar');
@@ -42,21 +43,25 @@ class GetImages{
                     this.filterCheckbox.checked);
             }).finally((result) => {
                 this.showTable();
+                this.focusedImage = "#image-0";
+                this.focusOnImage();
                 this.inputFileElement.value = '';
             });
         }, true);
 
         this.btnReset.addEventListener('click', e =>{
             this.deletePhotos();
-            this.showNothing();
+            this.showNothing();            
         }, false);
 
         this.btnZoomIn.addEventListener('click', e =>{
             this.zoomInPhotos();  
+            this.focusOnImage();
         }, true);
 
         this.btnZoomOut.addEventListener('click', e =>{
             this.zoomOutPhotos();  
+            this.focusOnImage();
         }, true);
 
         this.btnHide.addEventListener('click', e =>{
@@ -76,6 +81,7 @@ class GetImages{
         images.forEach(element => {
             element.style.width = this.imagesWidth + '%';
         });
+        
     }
 
     HideShowResetFilesVisibility(opacity = 0)
@@ -101,6 +107,7 @@ class GetImages{
         images.forEach(element => {
             element.style.width = this.imagesWidth + '%';
         });
+        
     }
 
     showNothing()
@@ -126,7 +133,7 @@ class GetImages{
 
     deletePhotos()
     {
-        let photoTable = document.querySelectorAll('th');
+        let photoTable = document.querySelectorAll('picture');
         photoTable.forEach((element)=>{
             element.parentNode.removeChild(element);
         });
@@ -174,7 +181,21 @@ class GetImages{
             }
         });
     }  
-        
+
+    defineFocusedImage(event)
+    {
+        document.querySelectorAll('.focused').forEach(element =>{
+            element.classList.remove('focused');
+        });
+        this.focusedImage = `#${event.srcElement.id}`;
+    }
+
+    focusOnImage()
+    {
+        location.hash = "";
+        location.hash = this.focusedImage;
+    }
+
     AdicionarMidia(files, loop=false, autoplay=false, bwFilter=false)
     {
         files.sort((element1, element2) =>{
@@ -183,28 +204,36 @@ class GetImages{
     
         for(let i = 0; i < files.length; i++)
         {
-            let td = document.createElement('th');
-            td.style.display = 'block';
-            td.style.padding = 0;
-
+            let picture = document.createElement('picture');   
+            picture.style.padding = 0; 
             let media = document.createElement(files[i].fileType == 'data:image' ? 'img' : 'video');
             
+            media.id = `image-${files[i].id}`;
+
             Object.assign(media, {
                 src: files[i].src,
                 autoplay,
                 loop, 
                 controls: true,
                 muted: true,
-                className: 'mediaSize',
+                
             });
 
+            media.classList.add('mediaSize');
             if(bwFilter==true)
             {
-                media.className = 'mediaSize bwFilter';
+                media.classList.add('bwFilter');
             }
 
-            td.appendChild(media);
-            document.querySelector('tr').appendChild(td);
+            media.addEventListener('mouseenter', (event)=>{
+                event.preventDefault();
+                this.defineFocusedImage(event);
+                media.classList.add('focused');
+            });
+
+            media.style.width = this.imagesWidth + '%';
+            picture.appendChild(media);
+            document.querySelector('tr').appendChild(picture);
         }
         
     }

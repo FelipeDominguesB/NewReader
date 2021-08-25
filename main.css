@@ -135,6 +135,7 @@ body{
 }
 .mediaSize{
     width: 70%;
+    align-self: center;
 }
 
 .checkBoxes{
@@ -173,3 +174,13 @@ body{
     margin-right: 15px;
 }
 
+picture{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.focused{
+    border: solid 2px black;
+}
